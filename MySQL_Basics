@@ -1,0 +1,456 @@
+Open the cmd as admin
+cd C:\Program Files\MySQL\MySQL Server 8.0\bin
+mysql -u root -p
+> show databases;
+CREATE SCHEMA `new_schema1` ;
+
+*************
+
+CREATE TABLE `new_schema1`.`employee` (
+  `EmpID` INT NOT NULL,
+  `EmpName` VARCHAR(60) NOT NULL,
+  `EmpAge` INT NOT NULL,
+  `EmpDept` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`EmpID`));
+
+*****************
+
+SELECT * FROM new_schema1.employee;
+********************
+
+INSERT INTO `new_schema1`.`employee` (`EmpID`, `EmpName`, `EmpAge`, `EmpDept`) VALUES ('1', 'Tom', '25', 'Operations');
+INSERT INTO `new_schema1`.`employee` (`EmpID`, `EmpName`, `EmpAge`, `EmpDept`) VALUES ('2', 'Emma', '23', 'Finance');
+INSERT INTO `new_schema1`.`employee` (`EmpID`, `EmpName`, `EmpAge`, `EmpDept`) VALUES ('3', 'Brad', '27', 'Marketing');
+INSERT INTO `new_schema1`.`employee` (`EmpID`, `EmpName`, `EmpAge`, `EmpDept`) VALUES ('4', 'Bradley', '26', 'IT');
+
+*******************
+SELECT * FROM new_schema1.employee;
+
+*************************
+
+CREATE TABLE `new_schema1`.`department` (
+  `DeptId` INT NOT NULL,
+  `DeptName` VARCHAR(45) NOT NULL,
+  `DeptZone` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`DeptId`));
+
+************************
+SELECT * FROM new_schema1.department;
+
+***************************
+INSERT INTO `new_schema1`.`department` (`DeptId`, `DeptName`, `DeptZone`) VALUES ('1', 'Operations', 'North');
+INSERT INTO `new_schema1`.`department` (`DeptId`, `DeptName`, `DeptZone`) VALUES ('2', 'Finance', 'South');
+INSERT INTO `new_schema1`.`department` (`DeptId`, `DeptName`, `DeptZone`) VALUES ('3', 'Marketing', 'East');
+INSERT INTO `new_schema1`.`department` (`DeptId`, `DeptName`, `DeptZone`) VALUES ('4', 'IT', 'West');
+
+*****************************
+create database baladb;
+***********************
+show databases;
+************************
+use baladb;
+
+CREATE TABLE EMPLOYEE(
+EmpID int ,
+FirstName varchar(255),
+LastName varchar(255),
+EmpAGE int,
+EmpZONE varchar(255)
+);
+
+SELECT * FROM baladb.employee;
+
+DESC EMPLOYEE;
+
+  INSERT INTO EMPLOYEE(EmpID, FirstName,LastName,EmpAGE,EmpZONE) VALUES(1,'Jack', 'Sparrow', 25, 'North');
+
+SELECT * FROM EMPLOYEE;
+
+INSERT INTO EMPLOYEE(EmpID, FirstName,LastName,EmpAGE,EmpZONE) VALUES(2,'Tom', 'Hanks', 25, 'South');
+
+SELECT * FROM EMPLOYEE;
+
+INSERT INTO EMPLOYEE(EmpID, FirstName,LastName,EmpAGE,EmpZONE) VALUES(3,'Brad', 'Pitt', 30, 'West');
+
+SELECT * FROM EMPLOYEE;
+
+
+INSERT INTO EMPLOYEE(EmpID, FirstName,LastName,EmpAGE,EmpZONE) VALUES(4,'Emma', 'Stone', 27, 'East');
+SELECT * FROM EMPLOYEE;
+
+DESC EMPLOYEE;
+
+SELECT * FROM EMPLOYEE;
+
+SELECT EmpID FROM EMPLOYEE;
+
+SELECT LastName FROM EMPLOYEE;
+
+SELECT EmpAGE,EmpZONE FROM EMPLOYEE;
+
+SELECT EmpID,FirstName,LastName FROM EMPLOYEE;
+
+USE baladb;
+
+CREATE TABLE EMPLOYEE2(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpAGE int
+);
+
+DESC EMPLOYEE2;
+
+INSERT INTO EMPLOYEE2(EmpID, FirstName,LastName,EmpAGE) VALUES(NULL,'Jack', 'Sparrow', 25);
+
+
+INSERT INTO EMPLOYEE2(EmpID, FirstName,LastName,EmpAGE) VALUES(1,'Jack', 'Sparrow', 25);
+
+SELECT * FROM EMPLOYEE2;
+
+USE baladb;
+
+CREATE TABLE EMPLOYEE3(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+UNIQUE(EmpID)
+);
+
+DESC EMPLOYEE3;
+
+CREATE TABLE EMPLOYEE4(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpZone varchar(255),
+PRIMARY KEY(EmpID)
+);
+
+DESC EMPLOYEE4;
+
+CREATE TABLE EMPLOYEE5(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpAGE int,
+CHECK(EmpAGE>20)
+);
+
+DESC EMPLOYEE5;
+
+INSERT INTO EMPLOYEE5(EmpID, FirstName,LastName,EmpAGE) VALUES(1,'Tom', 'Hanks', 18);
+
+
+INSERT INTO EMPLOYEE5(EmpID, FirstName,LastName,EmpAGE) VALUES(1,'Tom', 'Hanks', 25);
+
+
+select * from EMPLOYEE5;
+
+CREATE TABLE EMPLOYEE6(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpDept varchar(255) DEFAULT 'Operations'
+);
+
+
+select * from EMPLOYEE6;
+DESC EMPLOYEE6;
+
+INSERT INTO EMPLOYEE6(EmpID, FirstName,LastName) VALUES(1,'Emma', 'Stone');
+
+select * from EMPLOYEE6;
+
+
+SELECT * FROM baladb.employee;
+SELECT * FROM employee;
+
+CREATE INDEX DEMOINDEX ON EMPLOYEE(FirstName);
+
+CREATE INDEX DEMOINDEX2 ON EMPLOYEE(FirstName,LastName,EmpZONE);
+
+SHOW INDEXES FROM EMPLOYEE;
+
+DROP INDEX DEMOINDEX ON EMPLOYEE;
+
+SHOW INDEXES FROM EMPLOYEE;
+
+DESC EMPLOYEE;
+
+ALTER TABLE EMPLOYEE ADD EmpDEPT varchar(255);
+
+DESC EMPLOYEE;
+
+ALTER TABLE EMPLOYEE  DROP COLUMN EmpDEPT;
+
+DESC EMPLOYEE;
+
+ALTER TABLE EMPLOYEE ADD COLUMN EmpDEPT varchar(255);
+
+DESC EMPLOYEE;
+
+ALTER TABLE EMPLOYEE MODIFY COLUMN EmpDEPT int;
+
+DESC EMPLOYEE;
+
+SELECT * FROM employee;
+
+SELECT EmpAGE FROM EMPLOYEE;
+
+SELECT DISTINCT EmpAGE FROM EMPLOYEE;
+
+SELECT * FROM employee;
+
+SELECT FirstName from employee;
+
+SELECT FirstName,LastName,EmpAGE from employee;
+
+SELECT * FROM EMPLOYEE WHERE EmpAGE=25;
+
+SELECT * FROM EMPLOYEE WHERE EmpAGE<30;
+
+SELECT * FROM EMPLOYEE 
+WHERE EmpAGE=25 AND EmpZONE='North';
+
+
+SELECT * FROM EMPLOYEE where EmpAGE=25 AND EmpZONE='South' AND LastName='Hanks';
+
+SELECT * FROM EMPLOYEE WHERE EmpZONE='West' OR EmpZone='East';
+
+SELECT * FROM EMPLOYEE WHERE FirstName='Jack' OR LastName='Dorsey';
+
+SELECT * FROM EMPLOYEE WHERE NOT EmpAGE=30;
+
+SELECT * FROM EMPLOYEE WHERE NOT FirstName='Tom';
+
+*******************************************************************
+Coomments: 
+Single line comments [ -- ]
+Double line comments [ # ]
+
+SELECT * FROM EMPLOYEE; #fetch all records from table
+
+SELECT * FROM EMPLOYEE; -- to fetch all records from a table
+
+SELECT * /*Retrieve all records from 
+table EMPLOYEE. 
+We are using SELECT statement*/
+FROM EMPLOYEE;
+
+************************************************************************
+
+SELECT * FROM EMPLOYEE;
+
+SELECT COUNT(EmpAGE) FROM EMPLOYEE WHERE EmpAGE=25;
+
+SELECT COUNT(*) FROM EMPLOYEE;
+
+SELECT EmpAGE AS AGE_of_EMPLOYEES FROM EMPLOYEE ;
+
+SELECT FirstName AS Name1,LastName AS Name2 FROM EMPLOYEE;
+
+SELECT * FROM EMPLOYEE WHERE EmpZONE IN('North','East');
+
+
+SELECT * FROM EMPLOYEE WHERE EmpZONE NOT IN ('North','East');
+
+LIKE Operator:
+Search for a specified pattern
+Two wildcards:
+  % Zero, one or more characters
+  _ a single character
+
+SELECT * FROM EMPLOYEE WHERE FirstName LIKE 'e%';
+
+SELECT * FROM EMPLOYEE WHERE LastName LIKE 'S%';
+
+SELECT * FROM EMPLOYEE WHERE EmpZONE LIKE '%H';
+
+SELECT * FROM EMPLOYEE WHERE EmpZONE LIKE '___T';# Employee Zone having 't' at the 4th position
+
+SELECT * FROM EMPLOYEE WHERE EmpAGE BETWEEN 25 AND 30;
+
+
+SELECT * FROM EMPLOYEE WHERE EmpAGE NOT BETWEEN 25 AND 30;
+
+SELECT FirstName,LastName,EmpAGE,
+CASE
+WHEN EmpAGE > 25 THEN 'Employee with experience.Eligible for Sr.Profile'
+WHEN EmpAGE = 25 THEN 'Employee is mid-experienced level.Eligible'
+ELSE 'Freshers... new to the company'
+END AS Eligibility
+FROM EMPLOYEE;
+
+
+DELETE FROM EMPLOYEE WHERE EmpZONE = 'South';
+
+select * from employee;
+
+DELETE FROM EMPLOYEE;
+
+
+SELECT * FROM EMPLOYEE;
+desc EMPLOYEE;
+
+UPDATE EMPLOYEE SET EmpAGE=24 WHERE EmpID=3 ;
+
+UPDATE EMPLOYEE SET EmpAGE=26
+WHERE FirstName='Emma';
+
+DESC EMPLOYEE;
+
+DROP TABLE EMPLOYEE;
+
+DESC EMPLOYEE;
+SELECT * FROM EMPLOYEE;
+SHOW DATABASES;
+
+DROP DATABASE baladb;
+SHOW DATABASES;
+
+use baladb;
+
+SELECT * FROM EMPLOYEE;
+
+SELECT AVG(EmpAGE) FROM EMPLOYEE;
+
+SELECT SUM(EmpAGE) FROM EMPLOYEE;
+
+SELECT SUM(EmpAGE) AS RESULT FROM EMPLOYEE;
+
+SELECT * FROM EMPLOYEE ORDER BY EmpAGE;
+
+SELECT * FROM EMPLOYEE ORDER BY EmpAGE DESC;
+
+AUTO INCREMENT:  Unique number  
+
+CREATE DATABASE db2;
+SHOW DATABASES;
+use db2;
+CREATE TABLE STUDENT(
+ID int NOT NULL AUTO_INCREMENT,
+FirstName varchar(255),
+LastName varchar(255),
+AGE int,
+ZONE varchar(255),
+PRIMARY KEY(ID)
+);
+
+DESC STUDENT;
+
+INSERT INTO STUDENT(FirstName,LastName,AGE,ZONE) VALUES('Jack','Sparrow',28,'North');
+select * from Student;
+INSERT INTO STUDENT(FirstName,LastName,AGE,ZONE) VALUES('Emma','Stone',25,'South');
+
+INSERT INTO STUDENT(FirstName,LastName,AGE,ZONE) VALUES('Brad','Pitt',29,'East');
+select * from Student;
+
+MAX() function:
+SELECT MAX(AGE) AS LargestAge FROM STUDENT;
+
+MIN() function:
+SELECT MIN(EmpAGE) AS SmallestAge FROM STUDENT;
+
+Constraints:
+    Specifies the rules for data in a atble.
+  NOT NULL:
+    Won't have a null value.
+  UNIQUE
+    All the values in a column are unique.example: ID
+  PRIMARY KEY
+    Uniquely identify each row in a table.Example: EmpID,SSN No.,License No,Student Roll No.
+  FOREIGN KEY
+    Uniquely identify
+  CHECK
+    All values in a column satisfies a specific condition
+    Example: Age>20
+  DEFAULT
+    Set a dafault value
+  INDEX
+    Create & retrieve data quickly from a database
+
+USE db2;
+
+CREATE TABLE EMPLOYEE(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpAge int
+);
+
+DESC EMPLOYEE;
+
+INSERT INTO EMPLOYEE(EmpID,FirstName,LastName,EmpAge) VALUES(NULL,'Jack','Sparrow',25);
+
+INSERT INTO EMPLOYEE(EmpID,FirstName,LastName,EmpAge) VALUES(1,'Jack','Sparrow',25);
+SELECT * FROM EMPLOYEE;
+
+USE DB2;
+CREATE TABLE EMPLOYEE2(
+EEmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+UNIQUE(EmpID)
+);
+DESC EMPLOYEE;
+
+CREATE TABLE EMPLOYEE3(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpAGE int,
+CHECK(EmpAGE >20)
+);
+DESC EMPLOYEE3;
+
+INSERT INTO EMPLOYEE3(EmpID,FirstName,LastName,EmpAge) VALUES(1,'Tom',Hanks',18);
+
+SELECT * FROM EMPLOYEE3;
+
+CREATE TABLE EMPLOYEE4(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpDept varchar(255) DEFAULT 'Operations'
+);
+
+DESC EMPLOYEE4;
+INSERT INTO EMPLOYEE4(EmpID,FirstName,LastName,EmpDept) VALUES(5,'Bal','Pal','East');
+INSERT INTO EMPLOYEE4(EmpID,FirstName,LastName,EmpDept) VALUES(2,'Brad','Pitt','West');
+INSERT INTO EMPLOYEE4(EmpID,FirstName,LastName,EmpDept) VALUES(3,'Jack','Sparrow','North');
+INSERT INTO EMPLOYEE4(EmpID,FirstName,LastName,EmpDept) VALUES(4,'Lal','Bal','South');
+
+SELECT * FROM EMPLOYEE4;
+
+CREATE INDEX DEMOINDEX ON EMPLOYEE4(FirstName);
+
+
+SELECT * FROM EMPLOYEE4;
+
+CREATE INDEX DEMOINDEX2 ON EMPLOYEE4(FirstName,LastName,EmpDept);
+
+SHOW INDEXES FROM EMPLOYEE4;
+DROP INDEX DEMOINDEX ON EMPLOYEE4;
+SHOW INDEXES FROM EMPLOYEE;
+
+CREATE TABLE EMPLOYEE5(
+EmpID int NOT NULL,
+FirstName varchar(255),
+LastName varchar(255),
+EmpZone varchar(255),
+PRIMARY KEY (EmpID)
+);
+
+DESC EMPLOYEE5;
+
+SELECT * FROM EMPLOYEE4;
+SELECT * FROM EMPLOYEE4 LIMIT 2;
+
+JOINS:
+ SELECT * FROM EMPLOYEE;
+SELECT * FROM DEPARTMENT;
+INNER JOIN:
+  SELECT EMPLOYEE.EmpID,DEPARTMENT.DeptName FROM EMPLOYEE INNER JOIN DEPARTMENT ON EMPLOYEE.DeptID = DEPARTMENT.DeptID;
+SELECT EMPLOYEE.EmpID,DEPARTMENT.DeptName FROM DEPARTMENT LEFT JOIN EMPLOYEE ON EMPLOYEE.DeptID = DEPARTMENT.DeptID;
+SELECT EMPLOYEE.EmpID,DEPARTMENT.DeptName FROM DEPARTMENT RIGHT JOIN EMPLOYEE ON EMPLOYEE.DeptID = DEPARTMENT.DeptID;

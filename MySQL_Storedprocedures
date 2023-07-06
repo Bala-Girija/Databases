@@ -1,0 +1,454 @@
+https://www.mysqltutorial.org/introduction-to-sql-stored-procedures.aspx
+https://dotnettutorials.net/course/mysql-tutorials-for-beginners-and-professionals/
+
+https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx
+DELIMITER $$
+
+CREATE PROCEDURE GetEmployees()
+BEGIN
+    SELECT 
+        firstName, 
+        lastName, 
+        city, 
+        state, 
+        country
+    FROM employees
+    INNER JOIN offices using (officeCode);
+    
+END$$
+
+DELIMITER ;
+
+DROP PROCEDURE GetEmployees;
+
+DROP PROCEDURE IF EXISTS abc;
+
+SHOW WARNINGS;
+
+DELIMITER $$
+
+CREATE PROCEDURE GetPayments()
+BEGIN
+    SELECT 
+        customerName, 
+        checkNumber, 
+        paymentDate, 
+        amount
+    FROM payments
+    INNER JOIN customers 
+        using (customerNumber);
+END$$
+
+DELIMITER ;
+
+# syntax
+[IN | OUT | INOUT] parameter_name datatype[(length)]
+
+#The IN parameter example
+## The following example creates a stored procedure that finds all offices that locate in a country specified by the input parameter countryName:
+
+DELIMITER //
+
+CREATE PROCEDURE GetOfficeByCountry(
+	IN countryName VARCHAR(255)
+)
+BEGIN
+	SELECT * 
+ 	FROM offices
+	WHERE country = countryName;
+END //
+
+DELIMITER ;
+
+CALL GetOfficeByCountry('USA');
+CALL GetOfficeByCountry('France')
+# Because the countryName is the IN parameter, you must pass an argument. If you don’t do so, you’ll get an error:
+CALL GetOfficeByCountry();
+
+DELIMITER $$
+
+CREATE PROCEDURE GetOrderCountByStatus (
+	IN  orderStatus VARCHAR(25),
+	OUT total INT
+)
+BEGIN
+	SELECT COUNT(orderNumber)
+	INTO total
+	FROM orders
+	WHERE status = orderStatus;
+END$$
+
+DELIMITER ;
+
+/*
+The stored procedure GetOrderCountByStatus() has two parameters:
+
+The orderStatus: is the IN parameter specifies the status of orders to return.
+The total: is the OUT parameter that stores the number of orders in a specific status.
+*/
+CALL GetOrderCountByStatus('Shipped',@total);
+SELECT @total;
+
+# To get the number of orders that are in-process, you call the stored procedure GetOrderCountByStatus as follows:
+CALL GetOrderCountByStatus('in process',@total);
+SELECT @total AS  total_in_process;
+
+# https://www.mysqltutorial.org/stored-procedures-parameters.aspx
+#The INOUT parameter example
+DELIMITER $$
+
+CREATE PROCEDURE SetCounter(
+	INOUT counter INT,
+    IN inc INT
+)
+BEGIN
+	SET counter = counter + inc;
+END$$
+
+DELIMITER ;
+/*In this example, the stored procedure SetCounter() accepts one INOUT parameter ( counter ) and one IN parameter ( inc ).
+It increases the counter ( counter ) by the value of specified by the inc parameter.
+*/
+SET @counter = 1;
+CALL SetCounter(@counter,1); -- 2
+CALL SetCounter(@counter,1); -- 3
+CALL SetCounter(@counter,5); -- 8
+SELECT @counter; -- 8
+
+## Altering a stored procedure using MySQL Workbench
+DELIMITER $$
+
+CREATE PROCEDURE GetOrderAmount()
+BEGIN
+    SELECT 
+        SUM(quantityOrdered * priceEach) 
+    FROM orderDetails;
+END$$
+
+DELIMITER ;
+
+**********************
+DECLARE productCount INT DEFAULT 0;
+
+SELECT COUNT(*) 
+INTO productCount
+FROM products;
+
+## 
+DELIMITER $$
+
+CREATE PROCEDURE GetTotalOrder()
+BEGIN
+	DECLARE totalOrder INT DEFAULT 0;
+    
+    SELECT COUNT(*) 
+    INTO totalOrder
+    FROM orders;
+    
+    SELECT totalOrder;
+END$$
+
+DELIMITER ;
+
+
+
+##Here is the basic syntax of the SHOW PROCEDURE STATUS statement:
+
+SHOW PROCEDURE STATUS [LIKE 'pattern' | WHERE search_condition];
+## The following statement shows all stored procedure in the current MySQL server:
+
+SHOW PROCEDURE STATUS;
+SHOW PROCEDURE STATUS WHERE db = 'classicmodels';
+SHOW PROCEDURE STATUS LIKE '%Order%';
+
+#To show all stored procedures of a particular database, you use the following query:
+
+SELECT 
+    routine_name
+FROM
+    information_schema.routines
+WHERE
+    routine_type = 'PROCEDURE'
+        AND routine_schema = '<database_name>';
+
+
+SELECT 
+    routine_name
+FROM
+    information_schema.routines
+WHERE
+    routine_type = 'PROCEDURE'
+        AND routine_schema = 'classicmodels';
+
+
+## simple IF-THEN statement
+# SYNTAX
+IF condition THEN 
+   statements;
+END IF;
+
+DELIMITER $$
+
+CREATE PROCEDURE GetCustomerLevel(
+    IN  pCustomerNumber INT, 
+    OUT pCustomerLevel  VARCHAR(20))
+BEGIN
+    DECLARE credit DECIMAL(10,2) DEFAULT 0;
+
+    SELECT creditLimit 
+    INTO credit
+    FROM customers
+    WHERE customerNumber = pCustomerNumber;
+
+    IF credit > 50000 THEN
+        SET pCustomerLevel = 'PLATINUM';
+    END IF;
+END$$
+
+DELIMITER ;
+
+SELECT 
+    customerNumber, 
+    creditLimit
+FROM 
+    customers
+WHERE 
+    creditLimit > 50000
+ORDER BY 
+    creditLimit DESC;
+
+
+
+CALL GetCustomerLevel(141, @level);
+SELECT @level;
+
+## MySQL IF-THEN-ELSEIF-ELSE statement
+IF condition THEN
+   statements;
+ELSEIF elseif-condition THEN
+   elseif-statements;
+...
+ELSE
+   else-statements;
+END IF;
+
+
+DROP PROCEDURE GetCustomerLevel;
+
+## create the new GetCustomerLevel() stored procedure that uses the the IF-THEN-ELSEIF-ELSE statement.
+DELIMITER $$
+
+CREATE PROCEDURE GetCustomerLevel(
+    IN  pCustomerNumber INT, 
+    OUT pCustomerLevel  VARCHAR(20))
+BEGIN
+    DECLARE credit DECIMAL DEFAULT 0;
+
+    SELECT creditLimit 
+    INTO credit
+    FROM customers
+    WHERE customerNumber = pCustomerNumber;
+
+    IF credit > 50000 THEN
+        SET pCustomerLevel = 'PLATINUM';
+    ELSEIF credit <= 50000 AND credit > 10000 THEN
+        SET pCustomerLevel = 'GOLD';
+    ELSE
+        SET pCustomerLevel = 'SILVER';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+CALL GetCustomerLevel(447, @level); 
+SELECT @level;
+
+## Simple CASE statement
+CASE case_value
+   WHEN when_value1 THEN statements
+   WHEN when_value2 THEN statements
+   ...
+   [ELSE else-statements]
+END CASE;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetCustomerShipping(
+	IN  pCustomerNUmber INT, 
+	OUT pShipping       VARCHAR(50)
+)
+BEGIN
+    DECLARE customerCountry VARCHAR(100);
+
+SELECT 
+    country
+INTO customerCountry FROM
+    customers
+WHERE
+    customerNumber = pCustomerNUmber;
+
+    CASE customerCountry
+		WHEN  'USA' THEN
+		   SET pShipping = '2-day Shipping';
+		WHEN 'Canada' THEN
+		   SET pShipping = '3-day Shipping';
+		ELSE
+		   SET pShipping = '5-day Shipping';
+	END CASE;
+END$$
+
+DELIMITER ;
+
+
+
+CALL GetCustomerShipping(112,@shipping);
+
+## Searched CASE statement
+CASE
+    WHEN search_condition1 THEN statements
+    WHEN search_condition1 THEN statements
+    ...
+    [ELSE else-statements]
+END CASE;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetDeliveryStatus(
+	IN pOrderNumber INT,
+    OUT pDeliveryStatus VARCHAR(100)
+)
+BEGIN
+	DECLARE waitingDay INT DEFAULT 0;
+    SELECT 
+		DATEDIFF(requiredDate, shippedDate)
+	INTO waitingDay
+	FROM orders
+    WHERE orderNumber = pOrderNumber;
+    
+    CASE 
+		WHEN waitingDay = 0 THEN 
+			SET pDeliveryStatus = 'On Time';
+        WHEN waitingDay >= 1 AND waitingDay < 5 THEN
+			SET pDeliveryStatus = 'Late';
+		WHEN waitingDay >= 5 THEN
+			SET pDeliveryStatus = 'Very Late';
+		ELSE
+			SET pDeliveryStatus = 'No Information';
+	END CASE;	
+END$$
+DELIMITER ;
+
+
+CALL GetDeliveryStatus(10100,@delivery);
+SELECT @delivery;
+
+## MySQL LOOP statement
+[begin_label:] LOOP
+    statement_list
+END LOOP [end_label]
+
+
+[label]: LOOP
+    ...
+    -- terminate the loop
+    IF condition THEN
+        LEAVE [label];
+    END IF;
+    ...
+END LOOP;
+
+
+DROP PROCEDURE LoopDemo;
+
+DELIMITER $$
+CREATE PROCEDURE LoopDemo()
+BEGIN
+	DECLARE x  INT;
+	DECLARE str  VARCHAR(255);
+        
+	SET x = 1;
+	SET str =  '';
+        
+	loop_label:  LOOP
+		IF  x > 10 THEN 
+			LEAVE  loop_label;
+		END  IF;
+            
+		SET  x = x + 1;
+		IF  (x mod 2) THEN
+			ITERATE  loop_label;
+		ELSE
+			SET  str = CONCAT(str,x,',');
+		END  IF;
+	END LOOP;
+	SELECT str;
+END$$
+
+DELIMITER ;
+
+## MySQL WHILE loop statement
+[begin_label:] WHILE search_condition DO
+    statement_list
+END WHILE [end_label]
+
+
+## MySQL WHILE lo
+CREATE TABLE calendars(
+    id INT AUTO_INCREMENT,
+    fulldate DATE UNIQUE,
+    day TINYINT NOT NULL,
+    month TINYINT NOT NULL,
+    quarter TINYINT NOT NULL,
+    year INT NOT NULL,
+    PRIMARY KEY(id)
+);
+
+
+DELIMITER $$
+
+CREATE PROCEDURE InsertCalendar(dt DATE)
+BEGIN
+    INSERT INTO calendars(
+        fulldate,
+        day,
+        month,
+        quarter,
+        year
+    )
+    VALUES(
+        dt, 
+        EXTRACT(DAY FROM dt),
+        EXTRACT(MONTH FROM dt),
+        EXTRACT(QUARTER FROM dt),
+        EXTRACT(YEAR FROM dt)
+    );
+END$$
+
+DELIMITER ;
+
+
+CALL LoadCalendars('2019-01-01',31);
+
+## repeat
+
+[begin_label:] REPEAT
+    statement
+UNTIL search_condition
+END REPEAT [end_label]
+
+  
+CALL RepeatDemo();
+
+
+
+
+
+
+
+
+
+
+
